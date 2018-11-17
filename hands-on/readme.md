@@ -1,20 +1,16 @@
 # Xamarin Dev Days ハンズオン手順書
 
-これは、Xamarin.Forms と MSのクラウドサービス Microsoft Azure を使った簡単なアプリを作るハンズオンです。
+これは、Xamarin.Forms と Microsoft Azure を使った簡単なアプリを作るハンズオンです。
 
 Microsoft 本社の Xamarin チームが作った、詳細なハンズオン手順書『[Xamrin Dev Days Hands On Lab](https://github.com/xamarin/dev-days-labs/tree/master/HandsOnLab)』の日本語訳版をここに載せます。
 
 
 ## 今回 何を作るの？
 
-![完成形](./image/end.jpg)
-
 | 項目                       | 値                                                            |
 |----------------------------|---------------------------------------------------------------|
 | どんなアプリ？             | Xamarin Dev Days の本社スピーカーと、その人の詳細を表示するアプリ |
-| どんなアプリ？(技術的視点) | Microsoft Azure に接続された Xamarin.Forms で作るアプリ       |
-
-![](https://github.com/chomado/Xamalist/blob/master/doc_image/architecture.jpg?raw=true)
+| どんなアプリ？(技術的視点)  | Microsoft Azure に接続された Xamarin.Forms で作るアプリ       |
 
 
 ## 開発環境
@@ -23,35 +19,35 @@ Windows でも Mac でも良いです。
 
 |OS|OS のバージョン|要インストール済|
 |----|----|----|
-|Windows|Windows 10|Xamarin インストール済みの Visual Studio (2015 Update 3｜2017 RC)|
-|Mac OS X|10.11 ("El Capitan") 以降 |(Xamarin Studio もしくは VS for Mac) と 最新の Xcode |
+|Windows|Windows 10|.NET モバイル開発ワークロードをインストールした Visual Studio 2017|
+|Mac OS X|10.11 ("El Capitan") 以降 |Visual Studio for Mac と 最新の Xcode |
 
 # さぁ手を動かそう！
 
 【重要】      
-まず、アメリカ本家の[ハンズオンのレポジトリ](https://github.com/xamarin/dev-days-labs) をクローンまたはダウンロードしてローカルに保存し、開いておいてください。（この日本語リポジトリではなく、[こっち](https://github.com/xamarin/dev-days-labs)です）          
+以下の本家のレポジトリをクローンまたはダウンロードしてローカルに保存し、開いておいてください。（この日本語リポジトリではありません）
+
 [https://github.com/xamarin/dev-days-labs](https://github.com/xamarin/dev-days-labs)
 
 ![クローン先](image/clone.png)
 
 ## 手順 1 ：ソリューションファイルを開く
 
-[`dev-days-labs/HandsOnLab/Start/` ディレクトリ](https://github.com/xamarin/dev-days-labs/tree/master/HandsOnLab/Start) の中にある「`DevDaysSpeakers.sln`」を開いてください。   
-（Windows の場合は Visual Studio、Mac OS の場合は Xamarin Studio で開きます。）
+[`dev-days-labs/HandsOnLab/Start/` ディレクトリ](https://github.com/xamarin/dev-days-labs/tree/master/HandsOnLab/Start) の中にある「`DevDaysSpeakers.sln`」を開いてください。
+
 
 ソリューションタブを見ると、4つのプロジェクトで構成されているのが分かります。
 
 |#|プロジェクト名|概要|実行環境|
 |----|----|----|----|
-|1 | `DevDaysSpeakers`|共通コード部分 (model とか view とか view model とか) が全部入った Shared Project。|（不問）|
-|2 | `DevDaysSpeakers.Droid`|Android アプリケーション|（不問）|
-|3 | `DevDaysSpeakers.iOS`|iOS アプリケーション|実行には Mac が必要|
-|4 | `DevDaysSpeakers.UWP`|Windows 10 UWP アプリケーション|実行には Windows 10 & VS 2015 が必要|
+|1 | `DevDaysSpeakers`|共通コード部分 (model、view、view model など) が全部入った Shared Project。| |
+|2 | `DevDaysSpeakers.Droid`|Android アプリケーション| |
+|3 | `DevDaysSpeakers.iOS`|iOS アプリケーション| ビルドホストの macOS が必要|
+|4 | `DevDaysSpeakers.UWP`|Windows 10 UWP アプリケーション|Windows 10 上の Visual Studio 2015/2017 が必要|
 
 ![DevDaysSpeakers.sln](./image/Solution001.png)
 
-共通部分である `DevDaysSpeakers` プロジェクトの中に、空白の XAMLページ ([View/DetailsPage.xaml](https://github.com/xamarin/dev-days-labs/blob/master/HandsOnLab/Start/DevDaysSpeakers/DevDaysSpeakers/View/DetailsPage.xaml)など) がありますが、    
-これはこのハンズオンの中で使うことになるものです。
+共通部分である `DevDaysSpeakers` プロジェクトの中に、空白の XAMLページ ([View/DetailsPage.xaml](https://github.com/xamarin/dev-days-labs/blob/master/HandsOnLab/Start/DevDaysSpeakers/DevDaysSpeakers/View/DetailsPage.xaml)など) がありますが、これはこのハンズオンの中で使うことになるものです。
 
 ![](https://camo.githubusercontent.com/4c30ee2264e05b54aae37cf029bcc56fd62e05f9/68747470733a2f2f626c6f672e78616d6172696e2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031342f30362f58616d6172696e466f726d73312e706e67)
 
@@ -61,19 +57,16 @@ Windows でも Mac でも良いです。
 
 まず最初に私たちがしなければならないことは、インターネットから、すべての NuGet パッケージをリストアすることです。
 
+> Visual Studio for Mac では自動でリストアされます。
+
 どうやるかというと、ソリューションタブの中の『ソリューション』を
 右クリックして、『`Restore NuGet packages`』をクリックします。
 
-![Restore NuGet packages](./image/Solution002.png)    
-(↑ Windows版の Visual Studio でのスクショ)    
-
-![](./image/restore_on_mac.png)        
-(↑ Mac版の Visual Studio でのスクショ)    
+![Restore NuGet packages](./image/Solution002.png)
 
 ということで、アプリを「実行」してみましょう！    
 IDEの「▶」(再生ボタンみたいな)を押して実行です
 
-(↓ Mac版の Visual Studio でのスクショ)    
 ![完成形](./image/start_app.png)
 
 
@@ -82,7 +75,7 @@ IDEの「▶」(再生ボタンみたいな)を押して実行です
 スピーカーの情報を取ってこれるようにするため、 Speaker モデルを作りましょう。
 
 1. `DevDaysSpeakers (共通部分)` プロジェクトの中の `DevDaysSpeakers/Model/Speaker.cs` ファイルを開きます。
-1. 【コピペ】 Speaker クラスの中に、以下のプロパティを追加してください。
+2. 【コピペ】 Speaker クラスの中に、以下のプロパティを追加してください。
 
 ```csharp
 public string Id { get; set; }
@@ -122,10 +115,9 @@ public class SpeakersViewModel : INotifyPropertyChanged
 }
 ```
 
-そして    
-`INotifyPropertyChanged` にオンマウスして Ctrl＋. (コントロールキーを押しながらピリオドキーを押す) → ［インターフェイスを実装します］を選択するか、`INotifyPropertyChanged` を右クリックすると表示される［クイックアクションとリファクタリング］をクリックし、［インターフェイスを実装します］をクリックします。
+そして `INotifyPropertyChanged` にオンマウスして Ctrl＋. (コントロールキーを押しながらピリオドキーを押す) → ［インターフェイスを実装します］を選択するか、`INotifyPropertyChanged` を右クリックすると表示される［クイックアクションとリファクタリング］をクリックし、［インターフェイスを実装します］をクリックします。
 
-> OS X の場合は、オンマウスして Option + Enter →［インターフェイスを実装します］を選択するか、右クリックすると表示される［クイック修正］をクリックし、［インターフェイスを実装します］をクリックします。
+> macOS の場合は、オンマウスして Option + Enter →［インターフェイスを実装します］を選択するか、右クリックすると表示される［クイック修正］をクリックし、［インターフェイスを実装します］をクリックします。
 
 ![完成形](./image/quick_fix.png)
 
@@ -134,6 +126,7 @@ public class SpeakersViewModel : INotifyPropertyChanged
 ```csharp
 public event PropertyChangedEventHandler PropertyChanged;
 ```
+
  `OnPropertyChanged` というヘルパーメソッド(helper method)を (`SpeakersViewModel` クラスの中に) 作りましょう。    
 これは、プロパティが変更されるたびに呼ばれるメソッドです。
 
@@ -195,50 +188,42 @@ using System.Runtime.CompilerServices;
 
 namespace DevDaysSpeakers.ViewModel
 {
-	public class SpeakersViewModel : INotifyPropertyChanged
-	{
-		public event PropertyChangedEventHandler PropertyChanged;
+    public class SpeakersViewModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-		void OnPropertyChanged([CallerMemberName] string name = null) =>
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        bool isBusy;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                isBusy = value;
+                OnPropertyChanged();
+            }
+        }
 
-		bool busy;
-		public bool IsBusy
-		{ 
-			get { return busy; }
-			set 
-			{
-				busy = value;
-				OnPropertyChanged();
-			}
-		}
-	}
+        void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 }
 ```
 
 ### Speaker の ObservableCollection
 
 [メモ]    
-`ObservableCollection` (自分の中身が変わったことを検知する仕組みを持っているコレクション)     
+`ObservableCollection` (自分の中身が変わったことを検知する仕組みを持っているコレクション)
 
-インターネットから取得してきた speaker のデータを格納するために `ObservableCollection` を使います。
-なぜ `ObservableCollection` を使うかというと、これは要素(コレクションの中身)を追加とか削除とかすると発火する `CollectionChanged` というイベントを最初から持っているからです。
+インターネットから取得してきた speaker のデータを格納するために `ObservableCollection` を使います。なぜ `ObservableCollection` を使うかというと、これは要素(コレクションの中身)を追加とか削除とかすると発火する `CollectionChanged` というイベントを最初から持っているからです。
 
 コンストラクタを用意して、そのすぐ上に、自動プロパティを作ります。
+>【スニペット】ちなみに「ctor」と打って tab + tab すると、コンストラクタを自動で生成してくれます)
 
 ```csharp
-public ObservableCollection<Speaker> Speakers { get; set; }
-```
+public ObservableCollection<Speaker> Speakers { get; set; } = new ObservableCollection<Speaker>();
 
-コンストラクタの中で、`ObservableCollection` の新しいインスタンスを作ります。
-なので、SpeakersViewModelクラスのコンストラクタはこのようになります：
-
-(【スニペット】ちなみに「ctor」と打って tab + tab すると、コンストラクタを自動で生成してくれます)
-
-```csharp
 public SpeakersViewModel()
 {
-    Speakers = new ObservableCollection<Speaker>();
 }
 ```
 
@@ -276,15 +261,14 @@ async Task GetSpeakers()
     if (IsBusy)
         return;
 
-    Exception error = null;
     try
     {
         IsBusy = true;
 
     }
-    catch (Exception ex)
+    catch (Exception e)
     {
-        error = ex;
+
     }
     finally
     {
@@ -318,14 +302,15 @@ Speakers.Clear();
 foreach (var item in items)
     Speakers.Add(item);
 ```
-何か問題があれば **catch** 句で例外を保存し、最後の finally 句**の後**でポップアップアラートを表示します:
+
+何か問題があれば **catch** 句でポップアップアラートを表示します:
 
 ```csharp
-if (error != null)
-    await Application.Current.MainPage.DisplayAlert("Error!", error.Message, "OK");
+Debug.WriteLine("Error: " + e.Message);
+await Application.Current.MainPage.DisplayAlert("Error!", e.Message, "OK");
 ```
 
-完全なコードは次のようになるはずです:
+`GetSpeakers` メソッドの完全なコードは次のようになるはずです:
 
 ```csharp
 async Task GetSpeakers()
@@ -333,7 +318,6 @@ async Task GetSpeakers()
     if (IsBusy)
         return;
 
-    Exception error = null;
     try
     {
         IsBusy = true;
@@ -352,20 +336,14 @@ async Task GetSpeakers()
                 Speakers.Add(item);
         }
     }
-    catch (Exception ex)
+    catch (Exception e)
     {
-        Debug.WriteLine("Error: " + ex);
-        error = ex;
+        Debug.WriteLine("Error: " + e.Message);
+        await Application.Current.MainPage.DisplayAlert("Error!", e.Message, "OK");
     }
     finally
     {
         IsBusy = false;
-    }
-
-    if (error != null)
-    {
-        // ポップアップアラートを表示
-        await Application.Current.MainPage.DisplayAlert("Error!", error.Message, "OK");
     }
 }
 ```
@@ -379,7 +357,7 @@ async Task GetSpeakers()
 `ObservableCollection<Speaker> Speakers {get;set;}` を作成した場所で、**GetSpeakersCommand** Command を作成しましょう:
 
 ```csharp
-public Command GetSpeakersCommand { get; set; }
+public Command GetSpeakersCommand { get; }
 ```
 
 **SpeakersViewModel()** のコンストラクターの中で GetSpeakersCommand を作成し、使用するメソッドを割り当てます。更に IsBusy プロパティに影響を与える enabled フラグも渡します:
@@ -395,7 +373,7 @@ GetSpeakersCommand = new Command(
 ```csharp
 set
 {
-    busy = value;
+    isBusy = value;
     OnPropertyChanged();
     // CanExecute （このコマンドが実行可能かどうか）を更新
     GetSpeakersCommand.ChangeCanExecute();
@@ -411,86 +389,78 @@ using System.Runtime.CompilerServices;
 
 namespace DevDaysSpeakers.ViewModel
 {
-	public class SpeakersViewModel : INotifyPropertyChanged
-	{
-		public ObservableCollection<Speaker> Speakers { get; set; }
-		public Command GetSpeakersCommand { get; set; }
+    public class SpeakersViewModel : INotifyPropertyChanged
+    {
+        public ObservableCollection<Speaker> Speakers { get; set; } = new ObservableCollection<Speaker>();
+        public Command GetSpeakersCommand { get; }
 
-		public SpeakersViewModel() 
-		{
-			Speakers = new ObservableCollection<Speaker>();
-			GetSpeakersCommand = new Command(
-				async () => await GetSpeakers(),
-				() => !IsBusy);
-		}
+        public SpeakersViewModel()
+        {
+            GetSpeakersCommand = new Command(
+                async () => await GetSpeakers(),
+                () => !IsBusy);
+        }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-		void OnPropertyChanged([CallerMemberName] string name = null) =>
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        bool isBusy;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                isBusy = value;
+                OnPropertyChanged();
+            }
+        }
 
-		bool busy;
-		public bool IsBusy
-		{ 
-			get { return busy; }
-			set
-			{
-				busy = value;
-				OnPropertyChanged();
-				// CanExecute （このコマンドが実行可能かどうか）を更新
-				GetSpeakersCommand.ChangeCanExecute();
-			}
-		}
+        // インターネットから speaker のデータをすべて取ってくる
+        async Task GetSpeakers()
+        {
+            if (IsBusy)
+                return;
 
-		// インターネットから speaker のデータをすべて取ってくる
-		async Task GetSpeakers()
-		{
-			if (IsBusy)
-				return;
+            try
+            {
+                IsBusy = true;
 
-			Exception error = null;
-			try
-			{
-				IsBusy = true;
+                using(var client = new HttpClient())
+                {
+                    //サーバーから json を取得します
+                    var json = await client.GetStringAsync("http://demo4404797.mockable.io/speakers");
 
-				using (var client = new HttpClient())
-				{
-					//サーバーから json を取得します
-					var json = await client.GetStringAsync("http://demo4404797.mockable.io/speakers");
+                    //json をデシリアライズします
+                    var items = JsonConvert.DeserializeObject<List<Speaker>>(json);
 
-					//json をデシリアライズします
-					var items = JsonConvert.DeserializeObject<List<Speaker>>(json);
+                    //リストを Speakers に読み込ませます
+                    Speakers.Clear();
+                    foreach (var item in items)
+                        Speakers.Add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                //ポップアップアラートを表示します。
+                Debug.WriteLine("Error: " + e.Message);
+                await Application.Current.MainPage.DisplayAlert("Error!", e.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
-					//リストを Speakers に読み込ませます
-					Speakers.Clear();
-					foreach (var item in items)
-						Speakers.Add(item);
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine("Error: " + ex);
-				error = ex;
-			}
-			finally
-			{
-				IsBusy = false;
-			}
-
-			if (error != null)
-			{
-				// ポップアップアラートを表示
-				await Application.Current.MainPage.DisplayAlert("Error!", error.Message, "OK");
-			}
-		}
-	}
+        void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 }
 ```
 
 ## ユーザーインターフェース!!!
+
 さて、最初の Xamarin.Forms ユーザーインタフェースとして、**View/SpeakersPage.xaml** を作っていきましょう。
 
-今までは C# で書いてきましたが、ここから(ユーザインタフェース)は**XAML**(ざむる)という、マークアップ言語で書いていきます。(Extensible Application Markup Language)
+今までは C# で書いてきましたが、ここから(ユーザインタフェース)は **XAML** (ざむる) という、マークアップ言語で書いていきます。(Extensible Application Markup Language)
 
 ### SpeakersPage.xaml
 
@@ -510,11 +480,12 @@ namespace DevDaysSpeakers.ViewModel
 <Button Text="Sync Speakers" Command="{Binding GetSpeakersCommand}"/>
 ```
 
-このボタンの下に、サーバーからデータを受信しているときに使うローディング バーを表示します。ここでは、ActivityIndicator を使って、既に作ってある IsBusy プロパティにバインディングします：
+このボタンの下に、サーバーからデータを受信しているときに使うローディングバーを表示します。ここでは、ActivityIndicator を使って、既に作ってある IsBusy プロパティにバインディングします：
 
 ```xml
 <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
 ```
+
 【確認】現在、`SpeakersPage.xaml`は、次のようになっているはずです。
 
 ```xml
@@ -523,10 +494,10 @@ namespace DevDaysSpeakers.ViewModel
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DevDaysSpeakers.View.SpeakersPage"
              Title="Speakers">
-	<StackLayout Spacing="0">
-		<Button Text="Sync Speakers" Command="{Binding GetSpeakersCommand}"/>
-		<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
-	</StackLayout>
+    <StackLayout Spacing="0">
+        <Button Text="Sync Speakers" Command="{Binding GetSpeakersCommand}"/>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+    </StackLayout>
 </ContentPage>
 ```
 
@@ -594,7 +565,7 @@ macOSに正しく接続されている場合、接続状態は緑になってい
 ![iOS Setup](./image/AppRun002.png)
 
 > [メモ]    
-[iOS Simulator (for Windows) - Xamarin](https://developer.xamarin.com/guides/cross-platform/windows/ios-simulator/) を使用すると、Windows 側に iOS Simulator の画面が転送されます。2016/10/21 現在の既知の問題として、Xcode 8ではパフォーマンスが悪いことが報告されていますので、必要に応じて使用してください。
+[iOS Simulator (for Windows) - Xamarin](https://developer.xamarin.com/guides/cross-platform/windows/ios-simulator/) を使用すると、Windows 側に iOS Simulator の画面が転送されます。
 
 
 #### Android
@@ -643,8 +614,6 @@ private async void ListViewSpeakers_ItemSelected(object sender, SelectedItemChan
 }
 ```
 
-（もしここで`ListViewSpeakers`が無いよ、というエラーが出たら、一度ソリューションを「クリーン」して「リビルド」してみてください。IDEの表示上はエラーになっていてもビルドはちゃんと通って「実行」もできる、という場合があります。）
-
 上のコードでは、最初に選択されている項目が null でないことを確認してから、**Navigation** API を使って、新しく作ったページをプッシュし、最後に、項目の選択を解除します。
 
 ### DetailsPage.xaml
@@ -678,32 +647,33 @@ SpeakersPage と同じように StackLayout を使いますが、ここでは、
 ```
 
 【確認】結果的に、`DetailsPage.xaml`は このようになっているはずです。
+
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DevDaysSpeakers.View.DetailsPage"
              Title="Details">
-	<ScrollView Padding="10">
-		<StackLayout Spacing="10">
-			<!-- 詳細画面のコントロール群をここに書く -->
-			<Image Source="{Binding Avatar}" HeightRequest="200" WidthRequest="200"/>
+    <ScrollView Padding="10">
+        <StackLayout Spacing="10">
+            <!-- 詳細画面のコントロール群をここに書く -->
+            <Image Source="{Binding Avatar}" HeightRequest="200" WidthRequest="200"/>
 
-			<Label Text="{Binding Name}" FontSize="24"/>
-			<Label Text="{Binding Title}" TextColor="Purple"/>
-			<Label Text="{Binding Description}"/>
+            <Label Text="{Binding Name}" FontSize="24"/>
+            <Label Text="{Binding Title}" TextColor="Purple"/>
+            <Label Text="{Binding Description}"/>
 
-			<Button Text="読み上げる" x:Name="ButtonSpeak"/>
-			<Button Text="ウェブサイトに移動" x:Name="ButtonWebsite"/>
-		</StackLayout>    
-	</ScrollView>
+            <Button Text="読み上げる" x:Name="ButtonSpeak"/>
+            <Button Text="ウェブサイトに移動" x:Name="ButtonWebsite"/>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
 ```
 
 ### 読み上げる
 
 **DetailsPage.xaml.cs** を開いて、2つのクリック ハンドラを足しますが、ここでは、ButtonSpeak から始めます。
-このハンドラでは、 [Text To Speech Plugin](https://github.com/jamesmontemagno/TextToSpeechPlugin) を使って、スピーカーの詳細を読み上げるようにします。
+このハンドラでは、 [Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/) の [Text-To-Speech](https://docs.microsoft.com/en-us/xamarin/essentials/text-to-speech) を使って、スピーカーの詳細を読み上げるようにします。
 
 コンストラクタの BindingContext の下で、クリック ハンドラを追加します：
 
@@ -714,9 +684,9 @@ ButtonSpeak.Clicked += ButtonSpeak_Clicked;
 クリック ハンドラでは、Text To Speech のクロス プラットフォームな API を呼び出します：
 
 ```csharp
-private void ButtonSpeak_Clicked(object sender, EventArgs e)
+async void ButtonSpeak_Clicked(object sender, EventArgs e)
 {
-    CrossTextToSpeech.Current.Speak(this.speaker.Description);
+    await TextToSpeech.SpeakAsync(this.speaker.Description);
 }
 ```
 
@@ -732,7 +702,7 @@ ButtonWebsite.Clicked += ButtonWebsite_Clicked;
 そして、Device キーワードを用いて、OpenUri メソッドを呼び出します：
 
 ```csharp
-private void ButtonWebsite_Clicked(object sender, EventArgs e)
+void ButtonWebsite_Clicked(object sender, EventArgs e)
 {
     if (speaker.Website.StartsWith("http"))
         Device.OpenUri(new Uri(speaker.Website));
@@ -838,7 +808,7 @@ var items = await service.GetSpeakers();
 
 Speakers.Clear();
 foreach (var item in items)
-	Speakers.Add(item);
+    Speakers.Add(item);
 ```
 
 try 句は次のようになります。
@@ -884,6 +854,10 @@ Quickstart が終了したら、以下の画面が見えるはずです。また
 二つの宿題でDev Daysをさらに進めましょう。
 
 ### 宿題1: Cognitive Services
+
+>【メモ】2018/11/16 現在は　Cognitive Service の [Face](https://azure.microsoft.com/ja-jp/services/cognitive-services/face/) を使用します。
+
+<s>
 
 [Cognitive Serivce Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api)を使い、詳細ページに話し手の表情から幸福度を解析するボタンを追加しましょう。
 
@@ -993,6 +967,7 @@ var level = await EmotionService.GetAverageHappinessScoreAsync(this.speaker.Avat
 ```
 
 6.) ポップアップアラートを表示します。
+
 ```csharp
 await DisplayAlert("Happiness Level", EmotionService.GetHappinessMessage(level), "OK");
 ```
@@ -1000,6 +975,8 @@ await DisplayAlert("Happiness Level", EmotionService.GetHappinessMessage(level),
 完成！
 ![Microsoft.ProjectOxford.Emotion](image/withEmotion.png)
 
+
+</s>
 
 ### 宿題2: 話し手の詳細を編集する
 

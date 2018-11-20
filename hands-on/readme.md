@@ -553,16 +553,15 @@ App.cs を開いてみると、そこには、App() のコンストラクタが�
 
 遂に、iOS、Android、あるいは、UWP (Windows/VS2015 のみ) をスタートアップ プロジェクトとして設定し、デバッグを開始することができるようになりました！
 
-![Startup project](./image/AppRun001.png)
-
-![実行する](./image/jikkou.png)
+<img src="./image/AppRun001.png" width="600" />
 
 #### iOS
-PCを使っている場合、アプリの実行・デバッグを行うためには、XamarinがインストールされているmacOSのデバイスに接続する必要があります。
 
-macOSに正しく接続されている場合、接続状態は緑になっています。ターゲットとして、 **iPhoneSimulator** を選択してから、デバッグを行うシミュレータの種類を選択します。
+PC を使っている場合、アプリの実行・デバッグを行うためには、Xamarin がインストールされている macOS のデバイスに接続する必要があります。
 
-![iOS Setup](./image/AppRun002.png)
+macOS に正しく接続されている場合、接続状態は緑になっています。ターゲットとして、 **iPhoneSimulator** を選択してから、デバッグを行うシミュレータの種類を選択します。
+
+<img src="./image/AppRun002.png" width="600">
 
 > [メモ]    
 [iOS Simulator (for Windows) - Xamarin](https://developer.xamarin.com/guides/cross-platform/windows/ios-simulator/) を使用すると、Windows 側に iOS Simulator の画面が転送されます。
@@ -691,6 +690,7 @@ async void ButtonSpeak_Clicked(object sender, EventArgs e)
 ```
 
 ### ウェブサイトに移動
+
 Xamarin.Forms には、URL を既定のブラウザで開くためのクロス プラットフォームな機能が搭載されています。
 
 今度は、ButtonWebsite のクリック ハンドラを追加します：
@@ -851,132 +851,194 @@ Quickstart が終了したら、以下の画面が見えるはずです。また
 
 ## 宿題
 
-二つの宿題でDev Daysをさらに進めましょう。
+二つの宿題で Dev Days をさらに進めましょう。
 
 ### 宿題1: Cognitive Services
 
->【メモ】2018/11/16 現在は　Cognitive Service の [Face](https://azure.microsoft.com/ja-jp/services/cognitive-services/face/) を使用します。
+Microsoft Cognitive Service の [Face API](https://azure.microsoft.com/ja-jp/services/cognitive-services/face/) を使い、詳細ページに話し手の表情から幸福度を解析するボタンを追加しましょう。
 
-<s>
+実行結果は以下のようになります。
 
-[Cognitive Serivce Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api)を使い、詳細ページに話し手の表情から幸福度を解析するボタンを追加しましょう。
-
-![Microsoft.ProjectOxford.Emotion](image/withEmotion.png)
+<img src="./image/FaceAPI_finish.png" width="600" />
 
 
-http://microsoft.com/cognitive からアカウントとAPIキーを取得し、以下の手順を踏んでください。
+#### Face API をアクティブにする
 
-#### Cognitive Serivce Emotion API のアカウント作成
+最初に Face API を使用できる状態にします。
 
-上記リンクから Web にアクセスします。Microsoft アカウントでログインし、**Get started for free** をクリックします。
+[Face API](https://azure.microsoft.com/ja-jp/services/cognitive-services/face/) のページにアクセスし、「Face を試す」をクリックします。
 
-![Cognitive Serivce Emotion API](image/Cognitive_Emotion01.png)
+<img src="./image/FaceAPI_try.png" width="600" />
 
+Microsoft Azure のアカウントをお持ちでない方は「ゲスト」を選択します。Azure のアカウントをお持ちの方は「サインイン」を選択します。
 
-(もしうまく行かなかったらの時の話)
-![Cognitive Serivce Emotion API](image/GotErrorWhenRegisteringEmotionAPI.png)
+<img src="./image/FaceAPI_plans.png" width="600" />
 
+ゲストを選択した方は、同意するにチェックして次へを選択してください。Rest API のエンドポイント URL と Key が表示されますので、「KEY 1」を控えておきます。（今回は SDK でアクセスするため、Rest API のエンドポイントは使用しません。）
 
-画面が遷移します。**Emotion - Preview** にチェックが入っていることを確認し、画面下の Term、Privacy Policy のチェックをオンにして、**Subscribe** をクリックします。(Contact me with promotional offers and updates about Microsoft Cognitive Services. はチェックしなくても構いません)
+<img src="./image/FaceAPI_plans_free.png" width="400" />
 
-![Cognitive Serivce Emotion API](image/Cognitive_Emotion02.png)
+Azure アカウントを選択した方は、Microsoft Azure にサインインし、ポータルで「リソースの作成＞AI + Machine Learning＞Face」の順にクリックして新規に Face API を作成します。
 
-**My free subscriptions** に **Emotion** が登録されているので、**Show** をクリックして、Key1 のキーを控えておきます。
+<img src="./image/FaceAPI_azure_create01.png" width="600" />
 
-![Cognitive Serivce Emotion API](image/Cognitive_Emotion03.png)
+新規のブレードで以下の設定で「作成」ボタンをクリックします。
+
+- Name：任意
+- 場所：任意
+- 価格レベル：F0（1分に 20コール、1か月に 30,000コールの制限がある無料プラン）
+- Resource group：任意ですが、サービスと同じ名前で新規に作ると良いでしょう。
+
+<img src="./image/FaceAPI_azure_create02.png" width="300" />
+
+リソースに移動し、「Keys」をクリックし、表示される「KEY 1」を控えておきます。
+
+<img src="./image/FaceAPI_azure_create03.png" width="600" />
+
 
 #### Visual Studio での作業
 
-1.) **Microsoft.ProjectOxford.Emotion** を全プロジェクト(一番上の共通プロジェクト以外)に追加します。
+Microsoft.Azure.CognitiveServices.Vision.Face v2.2.0-preview を全プロジェクトに追加します。
 
-↓ Visual Studio for Mac での NuGet Package の追加方法
-![Microsoft.ProjectOxford.Emotion](image/AddingNuGetPackage.png)
+Windows の場合は、ソリューションを右クリックして「ソリューションの NuGet パッケージの管理」をクリックし、表示される NuGet タブで「プレリリースを含める」にチェックを入れて「face」と検索し、Microsoft.Azure.CognitiveServices.Vision.Face をインストールします。
 
-![Microsoft.ProjectOxford.Emotion](image/Cognitive01.png)
+<img src="./image/FaceAPI_NuGet01_win.png" width="600" />
 
-2.) `EmotionService`クラスを追加します (GetHappinessAsync の中の API キーは直してください)
+macOS の場合は、iOS／Android プロジェクトそれぞれで右クリックして「追加＞NuGet パッケージの追加」をクリックし、表示される NuGet ウィンドウで「プレリリースパッケージを表示する」にチェックを入れて「face」と検索し、Microsoft.Azure.CognitiveServices.Vision.Face をインストールします。
 
-必要な using は以下の通りです。
+<img src="./image/FaceAPI_NuGet01_mac1.png" width="600" />
 
-```csharp
-using Microsoft.ProjectOxford.Emotion;
-using Microsoft.ProjectOxford.Emotion.Contract;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+<img src="./image/FaceAPI_NuGet01_mac2.png" width="600" />
+
+
+`DetailsPage.xaml` を開き、レイアウトの一番下に以下のコードを追加します。
+
+```xml
+<Button Text="表情を読み取る" x:Name="ButtonFace"/>
 ```
 
-以下のクラスを作成します。
+次に `DetailsPage.xaml.cs` ファイルを開き、コンストラクターの中に以下のイベントハンドラを追加します。
 
 ```csharp
-// MSの エモーションAPIサービスを使い、スピーカーの顔写真の幸せ度(どの程度笑顔か)を判断するクラス
-public class EmotionService
+ButtonFace.Clicked += ButtonFace_Clicked;
+```
+
+クラス変数として以下のコードを追加します。
+
+- `subscriptionKey` にはこの章の最初に控えておいた「KEY1」の値を入力します。
+- ゲストではなく、Azure で新規に Face API を作成した場合は、`faceEndpoint` の URL の最初の部分を Face API を作成した場所で置き換えます。Face API の「Overview」タブで確認できます。
+
+<img src="./image/FaceAPI_azure_place.png" width="600" />
+
+```csharp
+// パラメータ設定
+const string subscriptionKey = "<SubscriptionKey>";
+const string faceEndpoint = "https://westcentralus.api.cognitive.microsoft.com";
+FaceAttributeType[] faceAttributes =
+    { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
+```
+
+
+`ButtonWebsite_Clicked` の下に以下のコードを追加します。
+
+```csharp
+async void ButtonFace_Clicked(object sender, EventArgs e)
 {
-    private static async Task<Emotion[]> GetHappinessAsync(string url)
+    // FaceClient の準備
+    var faceClient = new FaceClient(
+        new ApiKeyServiceClientCredentials(subscriptionKey),
+        new System.Net.Http.DelegatingHandler[] { });
+    faceClient.Endpoint = faceEndpoint;
+
+    // API 呼び出し, 結果取得
+    IList<DetectedFace> faceList =
+            await faceClient.Face.DetectWithUrlAsync(
+                speaker.Avatar, true, false, faceAttributes);
+
+    // 結果から一件目を取り出し表示値を作成, 結果がなければ代替テキスト
+    var face = faceList.Select(f => f.FaceAttributes)
+                       .Select(f => new { f.Age, f.Gender, Happiness = f.Emotion?.Happiness * 100d })
+                       .FirstOrDefault();
+    string age = face?.Age.ToString() ?? "none";
+    string gender = face?.Gender.ToString() ?? "none";
+    string happiness = face?.Happiness.ToString() ?? "none";
+
+    // Alert 表示
+    await DisplayAlert("face", $"Age:{age}, Gender:{gender}, Happiness:{happiness}", "OK");
+}
+```
+
+【確認】最終的な `DetailsPage.xaml.cs` は以下のようになっているはずです。
+
+```csharp
+namespace DevDaysSpeakers.View
+{
+    public partial class DetailsPage : ContentPage
     {
-        var emotionClient = new EmotionServiceClient("ここにAPIキー文字列を入れてね");
+        readonly Speaker speaker;
+        // パラメータ設定
+        const string subscriptionKey = "<SubscriptionKey>";
+        const string faceEndpoint = "https://westcentralus.api.cognitive.microsoft.com";
+        FaceAttributeType[] faceAttributes =
+            { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
 
-        var emotionResults = await emotionClient.RecognizeAsync(url);
 
-        if (emotionResults == null || emotionResults.Count() == 0)
+        public DetailsPage(Speaker speaker)
         {
-            // 顔写真で人間の顔が認識できなかった場合(猿とか)は例外を吐いて落ちる
-            throw new Exception("顔が認識できないよ");
+            InitializeComponent();
+
+            //Set local instance of speaker and set BindingContext
+            this.speaker = speaker;
+            BindingContext = this.speaker;
+
+            ButtonSpeak.Clicked += ButtonSpeak_Clicked;
+            ButtonWebsite.Clicked += ButtonWebsite_Clicked;
+            ButtonFace.Clicked += ButtonFace_Clicked;
         }
 
-        return emotionResults;
-    }
-
-    //複数の被検対象が存在する場合の平均幸福度算出
-    public static async Task<float> GetAverageHappinessScoreAsync(string url)
-    {
-        Emotion[] emotionResults = await GetHappinessAsync(url);
-
-        float score = 0;
-        foreach (var emotionResult in emotionResults)
+        async void ButtonSpeak_Clicked(object sender, EventArgs e)
         {
-            score = score + emotionResult.Scores.Happiness;
+            await TextToSpeech.SpeakAsync(this.speaker.Description);
         }
 
-        return score / emotionResults.Count();
-    }
+        void ButtonWebsite_Clicked(object sender, EventArgs e)
+        {
+            if (speaker.Website.StartsWith("http"))
+                Device.OpenUri(new Uri(speaker.Website));
+        }
 
-    // 幸福度スコア(大きいほど笑顔)を受け取り、その評価文字列を返す
-    public static string GetHappinessMessage(float score)
-    {
-        score = score * 100;
-        double result = Math.Round(score, 2);
+        async void ButtonFace_Clicked(object sender, EventArgs e)
+        {
+            // FaceClient の準備
+            var faceClient = new FaceClient(
+                new ApiKeyServiceClientCredentials(subscriptionKey),
+                new System.Net.Http.DelegatingHandler[] { });
+            faceClient.Endpoint = faceEndpoint;
 
-        if (score >= 50)
-            return result + " % ヽ（ヽ *ﾟ▽ﾟ*）ノわーい！しあわせ！";
-        else
-            return result + "% （；＿；）しあわせじゃない";
+            // API 呼び出し, 結果取得
+            IList<DetectedFace> faceList =
+                    await faceClient.Face.DetectWithUrlAsync(
+                        speaker.Avatar, true, false, faceAttributes);
+
+            // 結果から一件目を取り出し表示値を作成, 結果がなければ代替テキスト
+            var face = faceList.Select(f => f.FaceAttributes)
+                               .Select(f => new { f.Age, f.Gender, Happiness = f.Emotion?.Happiness * 100d })
+                               .FirstOrDefault();
+            string age = face?.Age.ToString() ?? "none";
+            string gender = face?.Gender.ToString() ?? "none";
+            string happiness = face?.Happiness.ToString() ?? "none";
+
+            // Alert 表示
+            await DisplayAlert("face", $"Age:{age}, Gender:{gender}, Happiness:{happiness}", "OK");
+        }
     }
 }
 ```
 
-3.) 詳細ページにボタンを追加し、 **x:Name="ButtonAnalyze"** と指定します。
+完成です！
 
-4.) クリックのハンドラを追加し、`async`キーワードを指定します。
+<img src="./image/FaceAPI_finish.png" width="600" />
 
-5.) 以下のコードを追加します。
-
-```csharp
-var level = await EmotionService.GetAverageHappinessScoreAsync(this.speaker.Avatar);
-```
-
-6.) ポップアップアラートを表示します。
-
-```csharp
-await DisplayAlert("Happiness Level", EmotionService.GetHappinessMessage(level), "OK");
-```
-
-完成！
-![Microsoft.ProjectOxford.Emotion](image/withEmotion.png)
-
-
-</s>
 
 ### 宿題2: 話し手の詳細を編集する
 

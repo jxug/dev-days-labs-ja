@@ -964,7 +964,7 @@ async void ButtonFace_Clicked(object sender, EventArgs e)
     string happiness = face?.Happiness.ToString() ?? "none";
 
     // Alert 表示
-    await DisplayAlert("face", $"Age:{age}, Gender:{gender}, Happiness:{happiness}", "OK");
+    await DisplayAlert("FaceAPI", $"Age: {age}\nGender: {gender}\nHappiness: {happiness}%", "OK");
 }
 ```
 
@@ -1029,7 +1029,7 @@ namespace DevDaysSpeakers.View
             string happiness = face?.Happiness.ToString() ?? "none";
 
             // Alert 表示
-            await DisplayAlert("face", $"Age:{age}, Gender:{gender}, Happiness:{happiness}", "OK");
+            await DisplayAlert("FaceAPI", $"Age: {age}\nGender: {gender}\nHappiness: {happiness}%", "OK");
         }
     }
 }
